@@ -1,10 +1,10 @@
 name: dist-builder
 
 
-inputs:\
+inputs:
   message: string
 
-outputs:\
+outputs:
   result: string
 
 runs:

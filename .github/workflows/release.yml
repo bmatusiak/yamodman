@@ -1,6 +1,6 @@
 name: release-app
 run-name: ${{ github.actor }} is building release-app
-on: [workflow_dispatch]
+on: [push]
 
 jobs:
   release:
@@ -19,4 +19,8 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
+    runs:
+      using: node16
+      main: index.js
+    steps:
       - run: echo "🍏 This job's status is ${{ job.status }}."

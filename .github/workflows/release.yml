@@ -8,6 +8,11 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
+    
+    runs:
+      using: node16
+      main: index.js
+      
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
@@ -19,8 +24,4 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
-    runs:
-      using: node16
-      main: index.js
-    steps:
       - run: echo "🍏 This job's status is ${{ job.status }}."

@@ -1,0 +1,12 @@
+name: dist-builder
+
+
+inputs:\
+  message: string
+
+outputs:\
+  result: string
+
+runs:
+  using: node16
+  main: index.js 

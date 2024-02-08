@@ -2,11 +2,9 @@ name: dist-builder
 
 inputs:
   # Input parameters your action accepts, e.g.,
-  message: "string"
-
-outputs:
-  # Values your action produces, e.g.,
-  result: "string"
+  message: 
+    description: message
+    required: true
 
 runs:
   using: node16

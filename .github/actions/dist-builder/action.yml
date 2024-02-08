@@ -7,11 +7,7 @@ inputs:
 outputs:
   # Values your action produces, e.g.,
   # result: string
-
-runs:
-  # Environment where your action runs, e.g.,
-  # on: ubuntu-latest
-
+  
 runs:
   using: node16
   main: index.js 

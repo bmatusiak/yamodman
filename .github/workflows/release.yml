@@ -20,7 +20,7 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
-      - uses: ../actions/dist-builder/action.yml
+      - uses: ./.github/actions/dist-builder/action.yml
         with:
           message: "Hello from the workflow!"
       - run: echo "🍏 This job's status is ${{ job.status }}."

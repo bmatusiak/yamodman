@@ -1,11 +1,16 @@
 name: dist-builder
 
-
 inputs:
-  message: string
+  # Input parameters your action accepts, e.g.,
+  # message: string
 
 outputs:
-  result: string
+  # Values your action produces, e.g.,
+  # result: string
+
+runs:
+  # Environment where your action runs, e.g.,
+  # on: ubuntu-latest
 
 runs:
   using: node16

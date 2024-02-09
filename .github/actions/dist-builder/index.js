@@ -1,4 +1,4 @@
-const { execSync } = require("child_process");
+const { execSync, spawn } = require("child_process");
 const { existsSync, readFileSync } = require("fs");
 const { join } = require("path");
 
@@ -11,7 +11,7 @@ const log = (msg) => console.log(`\n${msg}`); // eslint-disable-line no-console
  * Exits the current process with an error code and message
  */
 const exit = (msg) => {
-	console.error("index.js",msg);
+	console.error("index.js", msg);
 	process.exit(1);
 };
 
@@ -63,26 +63,74 @@ const setEnv = (name, value) => {
 	}
 };
 
+
+function executeSequentially(jobList) {
+	var result = Promise.resolve();
+	jobList.forEach(function (job) {
+		result = result.then(() => {
+			return new Promise((resolve, rejects) => {
+				job((err) => {
+					if (err) return rejects(err);
+					resolve()
+				});
+			});
+		});
+	});
+	return result;
+}
+
+function runAsync(cmd, cwd, callback) {
+	const cmd_args = cmd.split(" ");
+	cmd = cmd_args.shift();
+	return new Promise(() => {
+		let output;
+		let output_err;
+		const prog = spawn(cmd, cmd_args);
+		prog.stdout.on('data', (data) => {
+			console.log(`stdout: ${data}`);
+			if (!output) output = "";
+			output += data.toString("utf8");
+		});
+		prog.stderr.on('data', (data) => {
+			console.error(`stderr: ${data}`);
+			if (!output_err) output_err = "";
+			output_err += data.toString("utf8");
+		});
+		prog.on('close', (code) => {
+			console.log(`child process exited with code ${code}`);
+			callback(output, output_err);
+		});
+	})
+}
+
 /**
  * Installs NPM dependencies and builds/releases the Electron app
  */
 const runAction = () => {
-    const pkgRoot = getInput("package_root") || ".";
-    const appRoot = getInput("app_root") || pkgRoot;
-    
+	const pkgRoot = getInput("package_root") || ".";
+	const appRoot = getInput("app_root") || pkgRoot;
 	const pkgJsonPath = join(pkgRoot, "package.json");
-
 	if (!existsSync(pkgJsonPath)) {
 		exit(`\`package.json\` file not found at path "${pkgJsonPath}"`);
 	}
-
-    const pkgJson = JSON.parse(readFileSync(pkgJsonPath, "utf8"));
-
+	const pkgJson = JSON.parse(readFileSync(pkgJsonPath, "utf8"));
 	log(`Building ${pkgJson.version} `);
 
-	run(`npm install`, appRoot);
-	run(`npm run publish`, appRoot);
-	
-};
+	var jobs = [];
 
+	jobs.push((next) => {
+		runAsync('npm install', appRoot, (err, output) => {
+			next(err)
+		})
+	})
+
+	
+	jobs.push((next) => {
+		runAsync('npm run publish', appRoot, (err, output) => {
+			next(err)
+		})
+	})
+
+	executeSequentially(jobs)
+};
 runAction();

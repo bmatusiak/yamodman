@@ -28,9 +28,9 @@
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 
-import App from "./App";
+import App from './App/index';
 
-window.addEventListener("DOMContentLoaded", async () => {
+window.addEventListener('DOMContentLoaded', async () => {
     const root = createRoot(document.getElementById('root'));
     root.render(<App />);
 });

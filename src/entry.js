@@ -1,12 +1,14 @@
+const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY = global.MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY;
+const MAIN_WINDOW_WEBPACK_ENTRY = global.MAIN_WINDOW_WEBPACK_ENTRY;
 
-const { app, BrowserWindow, Menu } = require('electron');
-const path = require('path');
+const { app, BrowserWindow } = require('electron');
+// const path = require('path');
 
 // const __DEV__ = true;
 // const __DEV__ = false;
 const __DEV__ = !app.isPackaged;
 
-const menu_setup = require("./menu_setup")
+const menu_setup = require('./menu_setup')
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {

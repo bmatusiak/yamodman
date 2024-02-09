@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function App(props) {
+export default function App() {
 
     return (<>
         <h1>React</h1>

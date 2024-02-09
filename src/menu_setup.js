@@ -1,4 +1,4 @@
-const { app, Menu } = require('electron');
+const { Menu } = require('electron');
 
 module.exports = function menu_setup(__DEV__){
     // remove devtools menu

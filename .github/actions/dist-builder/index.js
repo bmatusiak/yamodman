@@ -126,7 +126,6 @@ function runAsync(cmd, cwd, callback) {
  */
 const runAction = () => {
 
-
 	const github_token = getInput("github_token", true);
 	setEnv("GITHUB_TOKEN", github_token);
 

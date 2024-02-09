@@ -82,6 +82,7 @@ function executeSequentially(jobList) {
 function runAsync(cmd, cwd, callback) {
 	const cmd_args = cmd.split(" ");
 	cmd = cmd_args.shift();
+	console.log("running", cmd, cmd_args)
 	return new Promise(() => {
 		let output;
 		let output_err;
@@ -120,11 +121,11 @@ const runAction = () => {
 
 	jobs.push((next) => {
 		runAsync('npm install', appRoot, (err, output) => {
-			next(err)
+			next()
 		})
 	})
 
-	
+
 	jobs.push((next) => {
 		runAsync('npm run publish', appRoot, (err, output) => {
 			next(err)

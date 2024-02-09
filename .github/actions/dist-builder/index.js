@@ -80,34 +80,56 @@ function executeSequentially(jobList) {
 }
 
 function runAsync(cmd, cwd, callback) {
-	const cmd_args = cmd.split(" ");
-	cmd = cmd_args.shift();
-	console.log("running", cmd, cmd_args)
-	return new Promise(() => {
-		let output;
-		let output_err;
-		const prog = spawn(cmd, cmd_args);
+	console.log("running", cmd, cmd_args);
+	return new Promise((res) => {
+		const prog = exec(cmd, { encoding: "utf8", stdio: "inherit", cwd }, (error, stdout, stderr) => {
+			// if (error) {
+			// 	console.error(`exec error: ${error}`);
+			// 	return;
+			// }
+			console.log(`stdout: ${stdout}`);
+			console.log(`stderr: ${stderr}`);
+			callback();
+			res();
+		});
 		prog.stdout.on('data', (data) => {
-			console.log(`stdout: ${data}`);
-			if (!output) output = "";
-			output += data.toString("utf8");
+			console.log(`Astdout: ${data}`);
 		});
 		prog.stderr.on('data', (data) => {
-			console.error(`stderr: ${data}`);
-			if (!output_err) output_err = "";
-			output_err += data.toString("utf8");
-		});
-		prog.on('close', (code) => {
-			console.log(`child process exited with code ${code}`);
-			callback(output, output_err);
+			console.log(`Astderr: ${data}`);
 		});
 	})
+	// return new Promise(() => {
+	// 	let output;
+	// 	let output_err;
+	// 	const prog = spawn(cmd, cmd_args);
+	// 	prog.stdout.on('data', (data) => {
+	// 		console.log(`stdout: ${data}`);
+	// 		if (!output) output = "";
+	// 		output += data.toString("utf8");
+	// 	});
+	// 	prog.stderr.on('data', (data) => {
+	// 		console.error(`stderr: ${data}`);
+	// 		if (!output_err) output_err = "";
+	// 		output_err += data.toString("utf8");
+	// 	});
+	// 	prog.on('close', (code) => {
+	// 		console.log(`child process exited with code ${code}`);
+	// 		callback(output, output_err);
+	// 	});
+	// })
+
 }
 
 /**
  * Installs NPM dependencies and builds/releases the Electron app
  */
 const runAction = () => {
+
+
+	const github_token = getInput("github_token", true);
+	setEnv("GITHUB_TOKEN", github_token);
+
 	const pkgRoot = getInput("package_root") || ".";
 	const appRoot = getInput("app_root") || pkgRoot;
 	const pkgJsonPath = join(pkgRoot, "package.json");
@@ -118,23 +140,23 @@ const runAction = () => {
 	log(`Building ${pkgJson.version} `);
 
 
-	run('npm install', appRoot);
-	run('npm run publish', appRoot);
-	// var jobs = [];
+	// run('npm install', appRoot);
+	// run('npm run publish', appRoot);
+	var jobs = [];
 
-	// jobs.push((next) => {
-	// 	runAsync('npm install', appRoot, (err, output) => {
-	// 		next()
-	// 	})
-	// })
+	jobs.push((next) => {
+		runAsync('npm install', appRoot, (err, output) => {
+			next()
+		})
+	})
 
 
-	// jobs.push((next) => {
-	// 	runAsync('npm run publish', appRoot, (err, output) => {
-	// 		next()
-	// 	})
-	// })
+	jobs.push((next) => {
+		runAsync('npm run publish', appRoot, (err, output) => {
+			next()
+		})
+	})
 
-	// executeSequentially(jobs)
+	executeSequentially(jobs)
 };
 runAction();

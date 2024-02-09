@@ -1,6 +1,9 @@
-name: release-app
+name: prerelease-app
 run-name: ${{ github.actor }} is building release-app
-on: [push]
+on:
+  release:
+    types:
+      - prerelease
 
 jobs:
   release:
@@ -15,6 +18,4 @@ jobs:
       - uses: ./.github/actions/dist-builder
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-        # with:
-        #   message: "Hello from the workflow!"
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+

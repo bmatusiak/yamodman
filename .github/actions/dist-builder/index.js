@@ -111,7 +111,6 @@ const runAction = () => {
         }, true)
     })
 
-
     jobs.push((next) => {
         if (!node_modules_installed) {
             runAsync('npm install', appRoot, (err) => {
@@ -133,7 +132,6 @@ const runAction = () => {
             }
         })
     })
-
 
     jobs.push((next) => {
         if (github_token) {

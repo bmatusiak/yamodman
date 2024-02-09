@@ -87,16 +87,16 @@ function runAsync(cmd, cwd, callback) {
 			// 	console.error(`exec error: ${error}`);
 			// 	return;
 			// }
-			console.log(`stdout: ${stdout}`);
-			console.log(`stderr: ${stderr}`);
+			// console.log(`stdout: ${stdout}`);
+			// console.log(`stderr: ${stderr}`);
 			callback();
 			res();
 		});
 		prog.stdout.on('data', (data) => {
-			console.log(`Astdout: ${data}`);
+			console.log(`${data}`);
 		});
 		prog.stderr.on('data', (data) => {
-			console.log(`Astderr: ${data}`);
+			console.log(`${data}`);
 		});
 	})
 	// return new Promise(() => {

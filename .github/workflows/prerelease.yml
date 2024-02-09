@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} is building release-app
 on:
   release:
     types:
-      - prerelease
+      - published
 
 jobs:
   release:

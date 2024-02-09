@@ -128,7 +128,7 @@ const runAction = () => {
 
 	jobs.push((next) => {
 		runAsync('npm run publish', appRoot, (err, output) => {
-			next(err)
+			next()
 		})
 	})
 

@@ -80,7 +80,7 @@ function executeSequentially(jobList) {
 }
 
 function runAsync(cmd, cwd, callback) {
-	console.log("running", cmd, cmd_args);
+	console.log("running", cmd, cwd);
 	return new Promise((res) => {
 		const prog = exec(cmd, { encoding: "utf8", stdio: "inherit", cwd }, (error, stdout, stderr) => {
 			// if (error) {

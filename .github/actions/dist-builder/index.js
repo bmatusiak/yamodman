@@ -83,12 +83,6 @@ function runAsync(cmd, cwd, callback) {
 	console.log("running", cmd, cwd);
 	return new Promise((res) => {
 		const prog = exec(cmd, { encoding: "utf8", stdio: "inherit", cwd }, (error, stdout, stderr) => {
-			// if (error) {
-			// 	console.error(`exec error: ${error}`);
-			// 	return;
-			// }
-			// console.log(`stdout: ${stdout}`);
-			// console.log(`stderr: ${stderr}`);
 			callback();
 			res();
 		});
@@ -98,27 +92,7 @@ function runAsync(cmd, cwd, callback) {
 		prog.stderr.on('data', (data) => {
 			console.log(`${data}`);
 		});
-	})
-	// return new Promise(() => {
-	// 	let output;
-	// 	let output_err;
-	// 	const prog = spawn(cmd, cmd_args);
-	// 	prog.stdout.on('data', (data) => {
-	// 		console.log(`stdout: ${data}`);
-	// 		if (!output) output = "";
-	// 		output += data.toString("utf8");
-	// 	});
-	// 	prog.stderr.on('data', (data) => {
-	// 		console.error(`stderr: ${data}`);
-	// 		if (!output_err) output_err = "";
-	// 		output_err += data.toString("utf8");
-	// 	});
-	// 	prog.on('close', (code) => {
-	// 		console.log(`child process exited with code ${code}`);
-	// 		callback(output, output_err);
-	// 	});
-	// })
-
+	});
 }
 
 /**
@@ -136,20 +110,14 @@ const runAction = () => {
 		exit(`\`package.json\` file not found at path "${pkgJsonPath}"`);
 	}
 	const pkgJson = JSON.parse(readFileSync(pkgJsonPath, "utf8"));
-	log(`Building ${pkgJson.version} `);
+	log(`Building ${pkgJson.name}@${pkgJson.version} `);
 
-
-	// run('npm install', appRoot);
-	// run('npm run publish', appRoot);
 	var jobs = [];
-
 	jobs.push((next) => {
 		runAsync('npm install', appRoot, (err, output) => {
 			next()
 		})
 	})
-
-
 	jobs.push((next) => {
 		runAsync('npm run publish', appRoot, (err, output) => {
 			next()

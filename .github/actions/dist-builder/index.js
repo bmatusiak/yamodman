@@ -11,7 +11,7 @@ const log = (msg) => console.log(`\n${msg}`); // eslint-disable-line no-console
  * Exits the current process with an error code and message
  */
 const exit = (msg) => {
-	console.error(msg);
+	console.error("index.js",msg);
 	process.exit(1);
 };
 
@@ -67,7 +67,7 @@ const setEnv = (name, value) => {
  * Installs NPM dependencies and builds/releases the Electron app
  */
 const runAction = () => {
-    const pkgRoot = getInput("package_root", true);
+    const pkgRoot = getInput("package_root") || ".";
     const appRoot = getInput("app_root") || pkgRoot;
     
 	const pkgJsonPath = join(pkgRoot, "package.json");

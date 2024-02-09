@@ -117,21 +117,24 @@ const runAction = () => {
 	const pkgJson = JSON.parse(readFileSync(pkgJsonPath, "utf8"));
 	log(`Building ${pkgJson.version} `);
 
-	var jobs = [];
 
-	jobs.push((next) => {
-		runAsync('npm install', appRoot, (err, output) => {
-			next()
-		})
-	})
+	run('npm install', appRoot);
+	run('npm run publish', appRoot);
+	// var jobs = [];
+
+	// jobs.push((next) => {
+	// 	runAsync('npm install', appRoot, (err, output) => {
+	// 		next()
+	// 	})
+	// })
 
 
-	jobs.push((next) => {
-		runAsync('npm run publish', appRoot, (err, output) => {
-			next()
-		})
-	})
+	// jobs.push((next) => {
+	// 	runAsync('npm run publish', appRoot, (err, output) => {
+	// 		next()
+	// 	})
+	// })
 
-	executeSequentially(jobs)
+	// executeSequentially(jobs)
 };
 runAction();

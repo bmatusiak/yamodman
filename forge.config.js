@@ -11,7 +11,7 @@ module.exports = {
           owner: 'bmatusiak',
           name: 'react-desktop-electron'
         },
-        draft: true
+        draft: true 
       }
     }
   ],

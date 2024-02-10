@@ -3,7 +3,7 @@ const { app, BrowserWindow } = require('electron');
 
 // const __DEV__ = true;
 // const __DEV__ = false;
-const __DEV__ = true;//!app.isPackaged;
+const __DEV__ = !app.isPackaged;
 
 const menu_setup = require('./menu_setup')
 

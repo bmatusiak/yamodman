@@ -1,12 +1,9 @@
-const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY = global.MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY;
-const MAIN_WINDOW_WEBPACK_ENTRY = global.MAIN_WINDOW_WEBPACK_ENTRY;
-
 const { app, BrowserWindow } = require('electron');
 // const path = require('path');
 
 // const __DEV__ = true;
 // const __DEV__ = false;
-const __DEV__ = !app.isPackaged;
+const __DEV__ = true;//!app.isPackaged;
 
 const menu_setup = require('./menu_setup')
 
@@ -22,12 +19,14 @@ const createWindow = () => {
     height: 600,
     webPreferences: {
       nodeIntegration: true, contextIsolation: false,
+      // eslint-disable-next-line no-undef
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       devTools: __DEV__
     },
   });
 
   // and load the index.html of the app.
+  // eslint-disable-next-line no-undef
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
 

@@ -25,12 +25,13 @@
  *  });
  * ```
  */
-import * as React from 'react';
-import { createRoot } from 'react-dom/client';
 
-import App from './App/index';
+import main from './App/index';
 
-window.addEventListener('DOMContentLoaded', async () => {
-    const root = createRoot(document.getElementById('root'));
-    root.render(<App />);
-});
+import rectify from '@bmatusiak/rectify';
+
+(() => {
+    var app = rectify.build(main.config)
+    app.start();
+    main(app.services);
+})();

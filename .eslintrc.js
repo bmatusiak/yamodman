@@ -33,12 +33,13 @@ module.exports = {
     ],
     'rules': {
         'quotes': [
-            'error',
+            'warn',
             'single',
             {
                 'allowTemplateLiterals': true
             }
-        ]
+        ],
+        'no-unused-vars' : 'warn'
     },
     'settings': {
         'react': {

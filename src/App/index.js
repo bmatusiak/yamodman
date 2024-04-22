@@ -1,9 +1,18 @@
-import React from 'react';
+import $ from 'jquery';
 
-export default function App() {
+var scenes = require('./scenes').default;
 
-    return (<>
-        <h1>React</h1>
-    </>);
+main.config = []
+    .concat(
+        scenes.config, 
+    [
+        require('./config'),
+        require('./react'),
+        require('./bootstrap')
+    ]);
 
+export default function main(app) {
+    $(() => {
+        app.scenes.load(app.scenes.config.startup);
+    });
 }

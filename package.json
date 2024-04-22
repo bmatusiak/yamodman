@@ -1,8 +1,8 @@
 {
   "name": "react",
-  "productName": "react",
+  "productName": "yamodman",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "Yet Another Mod Manager",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",

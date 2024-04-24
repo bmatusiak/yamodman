@@ -5,12 +5,16 @@ const { app, BrowserWindow } = require('electron');
 // const __DEV__ = false;
 const __DEV__ = !app.isPackaged;
 
-const menu_setup = require('./menu_setup')
-
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
+
+const { ipcMain } = require('electron')
+
+ipcMain.handle('DEV', async () => {
+  return __DEV__
+})
 
 const createWindow = () => {
   // Create the browser window.
@@ -25,17 +29,15 @@ const createWindow = () => {
     },
   });
 
-  // and load the index.html of the app.
   // eslint-disable-next-line no-undef
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-
 
   if (__DEV__) {
     // Open the DevTools.
     mainWindow.webContents.openDevTools();
-  }
-
-  menu_setup(__DEV__);
+  } else
+    mainWindow.removeMenu();
+  //require('./menu_setup')(__DEV__);
 };
 
 // This method will be called when Electron has finished

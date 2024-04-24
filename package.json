@@ -38,6 +38,7 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-react": "^7.33.2",
     "node-loader": "^2.0.0",
+    "raw-loader": "^4.0.2",
     "sass": "^1.75.0",
     "sass-loader": "^14.2.1",
     "style-loader": "^3.3.4"
@@ -46,9 +47,12 @@
     "@babel/preset-env": "^7.24.4",
     "@bmatusiak/rectify": "github:bmatusiak/rectify",
     "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
     "electron-squirrel-startup": "^1.0.0",
+    "file-loader": "^6.2.0",
     "jquery": "^3.7.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "yaml": "^2.4.1"
   }
 }

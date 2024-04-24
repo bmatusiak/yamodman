@@ -1,3 +1,4 @@
+var path = require('path');
 module.exports = [
   // Add support for native node modules
   {
@@ -46,6 +47,34 @@ module.exports = [
       // Compiles Sass to CSS
       'sass-loader',
     ],
+  },
+  {
+    test: /\.(png|jpg|gif)$/,
+    use: [{
+      loader: 'file-loader',
+      options: {
+        name: '[name].[ext]',
+        outputPath: 'images/',
+      },
+    }],
+  },
+  {
+    test: /\.(txt|svg)$/,
+    use: [{
+      loader: 'raw-loader'
+    }],
+  },
+  {
+    test: /\.(woff|woff2|eot|ttf|otf)$/i,
+    include: path.resolve(__dirname, './node_modules/bootstrap-icons/font/fonts'),
+    use: {
+      loader: 'file-loader',
+      options: {
+        name: '[name].[ext]',
+        outputPath: 'webfonts/',
+        publicPath: '../webfonts',
+      },
+    }
   },
   // Put your webpack loader rules in this array.  This is where you would put
   // your ts-loader configuration for instance:

@@ -35,3 +35,4 @@ import rectify from '@bmatusiak/rectify';
     app.start();
     main(app.services);
 })();
+

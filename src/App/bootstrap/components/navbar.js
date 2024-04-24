@@ -1,38 +1,40 @@
 import React from 'react';
 
-export default function NavBar() {
+export default function (themeSwitcher) {
 
-    return (<>
-        <style>{`
-            body {
-                min-height: 75rem;
-                padding-top: 4.5rem;
-            }
+
+    return function NavBar(props) {
+        var { title, back_title, back_action, sub_title } = props;
+
+        if (!title)
+            return (<><style>{`
+        body {
+            padding-top: 1.5rem;
+        }
+    `}</style></>);
+
+        return (<>
+            <style>{`
+            
         `}</style>
-        <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-            <div className="container-fluid">
-                <a className="navbar-brand" href="#">Fixed navbar</a>
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className="collapse navbar-collapse" id="navbarCollapse">
-                    <ul className="navbar-nav me-auto mb-2 mb-md-0">
-                        <li className="nav-item">
-                            <a className="nav-link active" aria-current="page" href="#">Home</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#">Link</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link disabled" aria-disabled="true">Disabled</a>
-                        </li>
-                    </ul>
-                    <form className="d-flex" role="search">
-                        <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                        <button className="btn btn-outline-success" type="submit">Search</button>
-                    </form>
+            <nav className="navbar">
+                <div className="container-fluid">
+                    <div className="navbar-nav flex-row gap-2">
+
+                        <a role="button" className="nav-link fw-bold " onClick={() => { }} >{title}</a>
+                        &nbsp;
+                        <button className="btn btn-primary" onClick={() => {
+                            if (back_action) back_action();
+                        }}>{back_title || ''}</button>
+                    </div>
+                    <div className='flex-grow-1 text-center flex-nowrap'>{sub_title || ''}</div>
+                    <div className='text-center flex-nowrap'>
+                        <button className='btn btn-primary' onClick={() => {
+                            themeSwitcher()
+                        }}><svg className="bi"><use xlinkHref="#moon-stars" /></svg></button>
+                    </div>
                 </div>
-            </div>
-        </nav>
-    </>)
+            </nav>
+        </>)
+    }
 }

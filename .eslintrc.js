@@ -32,6 +32,7 @@ module.exports = {
         'import'
     ],
     'rules': {
+        'react/prop-types':'off',
         'quotes': [
             'warn',
             'single',

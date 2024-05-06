@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-setup.consumes = ['scenes', 'config', 'bootstrap', 'utility'];
+setup.consumes = ['scenes', 'config', 'bootstrap', 'utility', 'thunderstore', 'electron'];
 setup.provides = [];
 
 export default function setup(imports, register) {
@@ -10,6 +10,10 @@ export default function setup(imports, register) {
     scenes.add('manage_profile', function manage_profile(props) {
 
         var { profile, item } = props.data;
+        const config = imports.config('manage-' + item.name + '-' + profile, {
+            last_components: 'installed'
+        });
+
 
         var scene_components = [
             require('./components/start_modded').default(props.data, imports),
@@ -21,11 +25,12 @@ export default function setup(imports, register) {
             require('./components/help').default(props.data, imports)
         ]
 
-        var [selected_component, set_selected_component] = useState('installed');
+        var [selected_component, set_selected_component] = useState(config.last_components);
 
         function NavElement(props) {
             var { part } = props;
             return (<li className="nav-item" onClick={() => {
+                config.last_components = part.id;
                 set_selected_component(part.id)
             }}>
                 <a className="nav-link d-flex align-items-center gap-2 " href="#" >
@@ -45,7 +50,7 @@ export default function setup(imports, register) {
         }
 
         return (<>
-            <bootstrap.navbar title="Manage Profile" back_title="Back" sub_title={profile} back_action={() => {
+            <bootstrap.navbar title="Manage Profile" back_title="Back" sub_title={item.name + ' - ' + profile} back_action={() => {
                 scenes.back();
             }} />
             <div className="container-fluid">

@@ -6,7 +6,7 @@ import events from 'events';
 const EventListenter = events.EventEmitter;
 
 export default function (profileData, imports) {
-    var { getDirectories } = imports.utility;
+    var { getDirectories, yaml } = imports.utility;
     var emitter = new EventListenter();
     var { profile, item, profile_path } = profileData;
     return {
@@ -26,7 +26,10 @@ export default function (profileData, imports) {
                 //load
 
                 (async () => {
-                    set_plugins_list(await getDirectories(profile_path + '\\BepInEx\\plugins'));
+                    try {
+                        set_plugins_list(await getDirectories(profile_path + '\\BepInEx\\plugins'));
+                        console.log(await yaml.read(profile_path + '\\mods.yml'));
+                    } catch (e) { e; }
                 })();
 
                 return () => {
@@ -73,12 +76,12 @@ export default function (profileData, imports) {
                                     </div>
                                     <div className="container-fluid">
                                         <div className="row row-cols-3 row-cols-sm-3 row-cols-md-6">
-                                            <PluginButton text="Uninstall" onClick={()=>{}}/>
-                                            <PluginButton text="Disable" onClick={()=>{}}/>
-                                            <PluginButton text="Associated" onClick={()=>{}}/>
-                                            <PluginButton text="Website" onClick={()=>{}}/>
-                                            <PluginButton text="Donate" onClick={()=>{}}/>
-                                            <PluginButton text="Enable Deps" onClick={()=>{}}/>
+                                            <PluginButton text="Uninstall" onClick={() => { }} />
+                                            <PluginButton text="Disable" onClick={() => { }} />
+                                            <PluginButton text="Associated" onClick={() => { }} />
+                                            <PluginButton text="Website" onClick={() => { }} />
+                                            <PluginButton text="Donate" onClick={() => { }} />
+                                            <PluginButton text="Enable Deps" onClick={() => { }} />
                                         </div>
                                     </div>
                                 </div>

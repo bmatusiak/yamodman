@@ -24,8 +24,8 @@ export default function setup(imports, register) {
 
         if (games_list)
             return (<>
-                <bootstrap.navbar title="Select Game" back_title="Change Data Directory" back_action={() => {
-                    scenes.load('change_data_dir')
+                <bootstrap.navbar title="Select Game" back_title="Settings" back_action={() => {
+                    scenes.load('settings')
                 }} />
                 <div className="container pt-4">
                     <div className='row'>

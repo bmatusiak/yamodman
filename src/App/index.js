@@ -1,23 +1,15 @@
-import $ from 'jquery';
-
 var scenes = require('./scenes').default;
 
-main.config = []
+export var core = require('./core/index').default;
+
+export var config = []
     .concat(
+        core,
         scenes.config,
         [
-            require('./storage'),
-            require('./react'),
-            require('./bootstrap'),
-            require('./utility'),
-
+            //require('./tactics'),
             require('./games'),
-            require('./thunderstore'),
- 
+            require('./thunderstore')
         ]);
 
-export default function main(app) {
-    $(() => {
-        app.scenes.load();
-    });
-}
+export default config;

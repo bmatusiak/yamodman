@@ -1,6 +1,10 @@
+var packageInfo = require('./package.json');
+
 module.exports = {
   packagerConfig: {
     asar: true,
+    'name': packageInfo.title,
+    'schemes': [packageInfo.name]
   },
   rebuildConfig: {},
   publishers: [
@@ -9,16 +13,22 @@ module.exports = {
       config: {
         repository: {
           owner: 'bmatusiak',
-          name: 'react-desktop-electron'
+          name: 'yamodman'
         },
-        draft: true 
+        draft: true
       }
     }
   ],
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
-      config: {},
+      config: {
+        name: packageInfo.title,
+        authors: packageInfo.author.name,
+        description: packageInfo.description
+        //certificateFile: './cert.pfx',
+        //certificatePassword: process.env.CERTIFICATE_PASSWORD
+      },
     },
     {
       name: '@electron-forge/maker-zip',
@@ -26,7 +36,9 @@ module.exports = {
     },
     {
       name: '@electron-forge/maker-deb',
-      config: {},
+      config: {
+        mimeType: ['x-scheme-handler/' + packageInfo.name]
+      },
     },
     {
       name: '@electron-forge/maker-rpm',

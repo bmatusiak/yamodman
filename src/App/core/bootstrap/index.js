@@ -1,18 +1,21 @@
 
 import $ from 'jquery';
 
-import * as bootstrap from 'bootstrap'
+//import * as bootstrap from 'bootstrap'
 import './index.scss'
 
 import bootstrapSVG from 'bootstrap-icons/bootstrap-icons.svg'
 
 import navbar from './components/navbar'
+import dialog from './components/dialog'
 
-setup.consumes = ['config'];
-setup.provides = ['bootstrap'];
+setup.consumes = ['config', 'appPackage'];
+setup.provides = ['bootstrap','$'];
 
 export default function setup(imports, register) {
-    
+    if (typeof document == 'undefined') return register(null, { bootstrap: void 0, $ })
+    const bootstrap = require('bootstrap');
+
     var default_color_mode = (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
     var config = imports.config('theme', {
@@ -31,16 +34,21 @@ export default function setup(imports, register) {
         $('body').attr('data-bs-theme', newMode);
         config.mode = newMode;
     }
-    
+
     $('body').attr('data-bs-theme', config.mode);
 
-    register(null, {
+    var $bootstrap = {
+        bs: bootstrap,
+        navbar: navbar(themeSwitcher, imports),
+        themeSwitcher,
+    }
+    imports.bootstrap = $bootstrap;
+    imports.$ = $;
+    $bootstrap.dialog = dialog(imports);
 
-        bootstrap: {
-            bs: bootstrap,
-            navbar: navbar(themeSwitcher),
-            themeSwitcher
-        }
+    register(null, {
+        '$':$,
+        bootstrap: $bootstrap
     });
 }
 

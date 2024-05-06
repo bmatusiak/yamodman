@@ -1,22 +1,18 @@
 import React from 'react';
 
-export default function (themeSwitcher) {
+import $ from 'jquery';
 
+export default function (themeSwitcher, imports) {
 
     return function NavBar(props) {
         var { title, back_title, back_action, sub_title } = props;
 
         if (!title)
-            return (<><style>{`
-        body {
-            padding-top: 1.5rem;
-        }
-    `}</style></>);
+            return (<><style>{`body { padding-top: 1.5rem; }`}</style></>);
+
+        $('title').text(imports.appPackage.title + ' | ' + title +  (sub_title ? ' - ' + sub_title : ''));
 
         return (<>
-            <style>{`
-            
-        `}</style>
             <nav className="navbar">
                 <div className="container-fluid">
                     <div className="navbar-nav flex-row gap-2">

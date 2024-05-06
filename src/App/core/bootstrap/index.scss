@@ -46,10 +46,7 @@ label {
 * Sidebar
 */
 
-@media (min-width: 768px) {
-    
-
-}
+@media (min-width: 768px) {}
 
 .sidebar .nav-link {
     font-size: .875rem;
@@ -58,4 +55,13 @@ label {
 
 .sidebar-heading {
     font-size: .75rem;
+}
+
+body {
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10 and IE 11 */
+    user-select: none;
+    /* Standard syntax */
 }

@@ -12,29 +12,31 @@ setup.consumes = [];
 setup.provides = ['session', 'config'];
 
 export default function setup(imports, register) {
-    
-    function typeStorage(storeageObject){
+    var empty = () => { return {} };
+    if (typeof document == 'undefined') return register(null, { config: empty, session: empty })
+
+    function typeStorage(storeageObject) {
 
         const getStored = (name) => {
             var r = JSON.parse(storeageObject.getItem(name));
-            if(r) return r;
-            setStored(name,{});        
+            if (r) return r;
+            setStored(name, {});
             return getStored(name);
         };
-        const setStored = (name, typeStoreObj) => 
-        storeageObject.setItem(name, JSON.stringify(typeStoreObj));
+        const setStored = (name, typeStoreObj) =>
+            storeageObject.setItem(name, JSON.stringify(typeStoreObj));
 
         return function typeStore(typeStore_name, typeStore_defaults) {
             var $typeStore_mem = getStored(typeStore_name);
             var $typeStore_obj = {
-                save:function(){
+                save: function () {
                     setStored(typeStore_name, $typeStore_mem)
                 }
             };
 
             for (var i in typeStore_defaults) {
-                if(i == 'save') continue;  
-                ((typeStore_property, default_value)=>{                  
+                if (i == 'save') continue;
+                ((typeStore_property, default_value) => {
                     Object.defineProperty($typeStore_obj, typeStore_property, {
                         get() {
                             return $typeStore_mem[typeStore_property];
@@ -46,7 +48,7 @@ export default function setup(imports, register) {
                         enumerable: true,
                         configurable: true,
                     });
-                    if(typeof $typeStore_obj[typeStore_property] == 'undefined'){
+                    if (typeof $typeStore_obj[typeStore_property] == 'undefined') {
                         $typeStore_obj[typeStore_property] = default_value;
                         $typeStore_obj.save();
                     }
@@ -61,5 +63,6 @@ export default function setup(imports, register) {
         session: typeStorage(sessionStorage),
         config: typeStorage(localStorage),
     });
-    
+
+
 }

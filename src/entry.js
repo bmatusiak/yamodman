@@ -1,66 +1,87 @@
-const { app, BrowserWindow } = require('electron');
-// const path = require('path');
-
-// const __DEV__ = true;
-// const __DEV__ = false;
+global.electron_app = require('electron');
+var packageInfo = require('../package.json');
+const path = require('node:path');
+const { app, BrowserWindow, protocol } = require('electron');
 const __DEV__ = !app.isPackaged;
 
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
+import app_config from './App/index';
+import rectify from '@bmatusiak/rectify';
+
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
-const { ipcMain } = require('electron')
+if (process.defaultApp) {
+  if (process.argv.length >= 2) {
+    app.setAsDefaultProtocolClient(packageInfo.name, process.execPath, [path.resolve(process.argv[1])])
+  }
+} else {
+  app.setAsDefaultProtocolClient(packageInfo.name)
+}
 
-ipcMain.handle('DEV', async () => {
-  return __DEV__
-})
+const gotTheLock = app.requestSingleInstanceLock();
 
-const createWindow = () => {
-  // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    width: 1024,
-    height: 768,
-    webPreferences: {
-      nodeIntegration: true, contextIsolation: false,
-      // eslint-disable-next-line no-undef
-      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
-      devTools: __DEV__
-    },
+if (!gotTheLock) {
+  app.quit()
+} else {
+  const createWindow = () => {
+    // Create the browser window.
+    const mainWindow = new BrowserWindow({
+      width: 1024,
+      height: 768,
+      webPreferences: {
+        nodeIntegration: true, contextIsolation: false,
+        // eslint-disable-next-line no-undef
+        preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+        devTools: __DEV__,
+        // securityOptions: {
+        //   // eslint-disable-next-line quotes
+        //   contentSecurityPolicy: "img-src 'self' blob:; default-src 'self' https://*; script-src 'self' https://*; style-src 'self' https://*; font-src 'self' https://*; object-src 'none'"
+        // }
+      },
+    });
+    (() => {
+      global.electron_app.mainWindow = mainWindow;
+      var app_core = rectify.build(app_config);
+      app_core.start(function () {
+        app.on('second-instance', (event, commandLine, workingDirectory) => {
+          restore_and_focus(mainWindow);
+          mainWindow.webContents.send('second-instance', { commandLine, workingDirectory });
+        });
+        app.on('open-url', (event, url) => {
+          restore_and_focus(mainWindow);
+          mainWindow.webContents.send('open-url', url);
+        });
+        protocol.handle(packageInfo.name, (request) => {
+          restore_and_focus(mainWindow);
+          mainWindow.webContents.send('open-protocal', request.url);
+        });
+        // eslint-disable-next-line no-undef
+        mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+        if (__DEV__) {
+          mainWindow.webContents.openDevTools();
+        } else
+          mainWindow.removeMenu();
+        //require('./menu_setup')(__DEV__);
+      });
+    })();
+  };
+  app.on('ready', createWindow);
+  app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+      app.quit();
+    }
   });
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
+}
 
-  // eslint-disable-next-line no-undef
-  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-
-  if (__DEV__) {
-    // Open the DevTools.
-    mainWindow.webContents.openDevTools();
-  } else
-    mainWindow.removeMenu();
-  //require('./menu_setup')(__DEV__);
-};
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
-
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
+function restore_and_focus(w) {
+  if (w) {
+    if (w.isMinimized()) w.restore()
+    w.focus()
   }
-});
-
-app.on('activate', () => {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
-});
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+}

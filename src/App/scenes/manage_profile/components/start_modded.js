@@ -1,6 +1,7 @@
 import React from 'react';
 
-export default function (profile, item) {
+export default function (profile, imports) {
+    
     return {
         id: 'start_modded',
         catagory: 'game',
@@ -9,7 +10,7 @@ export default function (profile, item) {
         component: function component(props) {
 
             return (<>
-                
+                {JSON.stringify(profile)}
             </>);
 
         }
